@@ -1,3 +1,5 @@
+import { parseBookingAmount, calculateRevenueForBookings } from './bookingHelpers';
+
 interface UserMetrics {
   totalUsers: number;
   activeUsers: number;
@@ -59,12 +61,12 @@ export const trackUserRegistration = (userData: any) => {
 
 export const trackPayment = (paymentData: any) => {
   const analytics = getAnalytics();
-  const amount = parseFloat(paymentData.amount.replace('$', ''));
-  
+  const amount = parseBookingAmount(paymentData.amount);
+
   // Update revenue metrics
   analytics.revenue.totalRevenue += amount;
   analytics.revenue.monthlyRevenue += amount;
-  
+
   // Track payment event
   const events = JSON.parse(localStorage.getItem('mindcare_analytics_events') || '[]');
   events.push({
@@ -76,7 +78,7 @@ export const trackPayment = (paymentData: any) => {
     data: { amount, sessionType: paymentData.sessionType }
   });
   localStorage.setItem('mindcare_analytics_events', JSON.stringify(events));
-  
+
   saveAnalytics(analytics);
   dispatchAnalyticsUpdate();
 };
@@ -194,14 +196,9 @@ export const getAnalytics = (): PlatformAnalytics => {
   
   const completedSessions = bookings.filter((b: any) => b.status === 'completed').length;
   const totalSessions = bookings.length;
-  
+
   // Calculate revenue from completed bookings
-  const totalRevenue = bookings
-    .filter((b: any) => b.status === 'completed')
-    .reduce((sum: number, booking: any) => {
-      const amount = parseFloat(booking.amount?.replace('$', '') || '0');
-      return sum + amount;
-    }, 0);
+  const totalRevenue = calculateRevenueForBookings(bookings);
 
   const initialAnalytics: PlatformAnalytics = {
     users: {
@@ -265,13 +262,8 @@ export const updateAnalyticsFromCurrentData = () => {
   analytics.sessions.sessionCompletionRate = totalSessions > 0 ? (completedSessions / totalSessions) * 100 : 0;
   
   // Update revenue metrics
-  const totalRevenue = bookings
-    .filter((b: any) => b.status === 'completed')
-    .reduce((sum: number, booking: any) => {
-      const amount = parseFloat(booking.amount?.replace('$', '') || '0');
-      return sum + amount;
-    }, 0);
-  
+  const totalRevenue = calculateRevenueForBookings(bookings);
+
   analytics.revenue.totalRevenue = totalRevenue;
   analytics.revenue.monthlyRevenue = totalRevenue;
   analytics.revenue.averageSessionValue = totalSessions > 0 ? totalRevenue / totalSessions : 120;
@@ -362,7 +354,7 @@ export const generateTimeSeriesData = () => {
     const paymentsProcessed = dayEvents.filter((e: any) => e.type === 'payment_processed').length;
     const revenue = dayEvents
       .filter((e: any) => e.type === 'payment_processed')
-      .reduce((sum: number, e: any) => sum + (e.data?.amount || 0), 0);
+      .reduce((sum: number, e: any) => sum + (parseBookingAmount(e.data?.amount) || 0), 0);
 
     return {
       date,
