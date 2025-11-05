@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Search, Filter, Plus, Eye, CreditCard as Edit, Trash2, Shield, UserCheck, UserX, Mail, Phone, Calendar, MoreVertical, Ban, CheckCircle, AlertTriangle, Award, DollarSign, Star, Clock } from 'lucide-react';
+import { Users, Search, Filter, Plus, Eye, CreditCard as Edit, Trash2, Shield, UserCheck, UserX, Mail, Phone, Calendar, MoreVertical, Ban, CheckCircle, AlertTriangle, Award, DollarSign, Clock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import toast from 'react-hot-toast';
@@ -241,12 +241,6 @@ function TherapistsManagementPage() {
       icon: Clock,
       color: 'from-yellow-500 to-orange-500'
     },
-    {
-      title: 'Average Rating',
-      value: (therapists.reduce((sum, t) => sum + t.rating, 0) / therapists.length || 0).toFixed(1),
-      icon: Star,
-      color: 'from-purple-500 to-pink-500'
-    }
   ];
 
   return (
@@ -436,14 +430,6 @@ function TherapistsManagementPage() {
                     ${therapist.hourlyRate}/hour
                   </span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Star className="w-4 h-4 text-yellow-400" />
-                  <span className={`text-sm ${
-                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                  }`}>
-                    {therapist.rating} ({therapist.patientsCount} patients)
-                  </span>
-                </div>
               </div>
 
               <div className="flex items-center justify-between">
@@ -613,17 +599,6 @@ function TherapistsManagementPage() {
                         <p className={`${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                           ${selectedTherapist.hourlyRate}
                         </p>
-                      </div>
-                      <div>
-                        <label className={`text-sm font-medium ${
-                          theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-                        }`}>Rating</label>
-                        <div className="flex items-center space-x-2">
-                          <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                          <span className={`${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                            {selectedTherapist.rating}
-                          </span>
-                        </div>
                       </div>
                     </div>
                   </div>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
+import {
   BarChart3, Users, DollarSign, Calendar, TrendingUp, Download,
-  Activity, Heart, Clock, Star, RefreshCw, FileText
+  Activity, Heart, Clock, RefreshCw, FileText
 } from 'lucide-react';
 import { 
   LineChart, Line, AreaChart, Area, BarChart, Bar, 
@@ -860,11 +860,6 @@ function AnalyticsPage() {
                   <th className={`px-4 py-3 text-left text-sm font-medium ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
-                    Rating
-                  </th>
-                  <th className={`px-4 py-3 text-left text-sm font-medium ${
-                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                  }`}>
                     Revenue
                   </th>
                 </tr>
@@ -892,14 +887,6 @@ function AnalyticsPage() {
                       theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                     }`}>
                       {therapist.patients}
-                    </td>
-                    <td className={`px-4 py-3 text-sm ${
-                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                    }`}>
-                      <div className="flex items-center space-x-1">
-                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                        <span>{therapist.rating.toFixed(1)}</span>
-                      </div>
                     </td>
                     <td className={`px-4 py-3 text-sm font-medium text-green-600`}>
                       ₹{therapist.revenue.toLocaleString()}
